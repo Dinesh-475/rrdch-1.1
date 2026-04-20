@@ -28,23 +28,83 @@
             display: flex;
             flex-direction: column;
             position: relative;
+            overflow-x: hidden;
         }
 
-        body::before {
-            content: '';
+        /* ═══════════════════════════════════════════════════════════════
+           PARALLAX BACKGROUND LAYERS
+        ═══════════════════════════════════════════════════════════════ */
+        .parallax-container {
             position: fixed;
-            inset: -20px;
+            inset: 0;
+            z-index: -3;
+            overflow: hidden;
+        }
+
+        .parallax-layer {
+            position: absolute;
+            inset: -50px;
+            will-change: transform;
+        }
+
+        .parallax-layer-1 {
             background: url('images/new_hero_bg.png') center/cover no-repeat;
-            filter: blur(12px);
+            filter: blur(8px) brightness(0.9);
+            transform: translateZ(-100px) scale(1.1);
+        }
+
+        .parallax-layer-2 {
+            background: linear-gradient(135deg, rgba(28,69,120,0.1) 0%, rgba(195,156,91,0.1) 50%, rgba(28,69,120,0.1) 100%);
+            transform: translateZ(-50px) scale(1.05);
+        }
+
+        .parallax-layer-3 {
+            background: radial-gradient(circle at 20% 80%, rgba(195,156,91,0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(28,69,120,0.15) 0%, transparent 50%);
+        }
+
+        /* Floating Particles */
+        .particles-container {
+            position: fixed;
+            inset: 0;
             z-index: -2;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: rgba(195,156,91,0.4);
+            border-radius: 50%;
+            animation: float 15s infinite ease-in-out;
+            box-shadow: 0 0 10px rgba(195,156,91,0.6);
+        }
+
+        .particle:nth-child(1) { left: 10%; top: 20%; animation-delay: 0s; animation-duration: 12s; }
+        .particle:nth-child(2) { left: 20%; top: 80%; animation-delay: 2s; animation-duration: 18s; width: 8px; height: 8px; }
+        .particle:nth-child(3) { left: 70%; top: 10%; animation-delay: 4s; animation-duration: 14s; }
+        .particle:nth-child(4) { left: 80%; top: 60%; animation-delay: 6s; animation-duration: 16s; width: 4px; height: 4px; }
+        .particle:nth-child(5) { left: 40%; top: 40%; animation-delay: 8s; animation-duration: 20s; width: 10px; height: 10px; }
+        .particle:nth-child(6) { left: 90%; top: 30%; animation-delay: 10s; animation-duration: 13s; }
+        .particle:nth-child(7) { left: 15%; top: 50%; animation-delay: 12s; animation-duration: 17s; width: 5px; height: 5px; }
+        .particle:nth-child(8) { left: 60%; top: 90%; animation-delay: 14s; animation-duration: 15s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0.3; }
+            25% { transform: translateY(-30px) translateX(10px) rotate(90deg); opacity: 0.6; }
+            50% { transform: translateY(-20px) translateX(-10px) rotate(180deg); opacity: 0.4; }
+            75% { transform: translateY(-40px) translateX(5px) rotate(270deg); opacity: 0.7; }
         }
 
         body::after {
             content: '';
             position: fixed;
             inset: 0;
-            background: rgba(235, 240, 246, 0.75);
+            background: rgba(235, 240, 246, 0.6);
             z-index: -1;
+            backdrop-filter: blur(2px);
         }
 
         /* ── Top Nav ─────────────────────────────── */
@@ -178,7 +238,9 @@
             text-decoration: underline;
         }
 
-        /* CARD */
+        /* ═══════════════════════════════════════════════════════════════
+           3D CARD EFFECTS WITH TILT
+        ═══════════════════════════════════════════════════════════════ */
         .flip-card__inner {
             width: 350px;
             height: 480px;
@@ -186,8 +248,12 @@
             background-color: transparent;
             perspective: 1000px;
             text-align: center;
-            transition: transform 0.8s;
+            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             transform-style: preserve-3d;
+        }
+
+        .flip-card__inner.tilt-3d {
+            transition: transform 0.1s ease-out;
         }
 
         .toggle:checked ~ .flip-card__inner {
@@ -210,51 +276,97 @@
             backface-visibility: hidden;
             background: var(--bg-color);
             gap: 15px;
-            border-radius: 5px;
+            border-radius: 12px;
             border: 2px solid var(--main-color);
-            box-shadow: 6px 6px 0 var(--main-color);
+            box-shadow: 8px 8px 0 var(--main-color), 0 20px 40px rgba(0,0,0,0.15);
+            transition: all 0.3s ease;
+        }
+
+        .flip-card__front:hover, .flip-card__back:hover {
+            box-shadow: 12px 12px 0 var(--main-color), 0 30px 60px rgba(0,0,0,0.2);
+        }
+
+        /* 3D Role Tabs */
+        .role-tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 30px;
+            justify-content: center;
+            perspective: 1000px;
+        }
+        .role-tab {
+            padding: 10px 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            color: white;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform-style: preserve-3d;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .role-tab:hover {
+            background: rgba(255,255,255,0.25);
+            border-color: rgba(255,255,255,0.6);
+            transform: translateY(-3px) rotateX(10deg);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+        .role-tab.active {
+            background: var(--bg-color);
+            border-color: var(--main-color);
+            box-shadow: 4px 4px 0 var(--main-color), 0 10px 30px rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+            color: var(--main-color);
+        }
+        .role-tab.active[data-role="patient"] { color: var(--patient); border-color: var(--patient); box-shadow: 4px 4px 0 var(--patient), 0 10px 30px rgba(2,132,199,0.3); }
+        .role-tab.active[data-role="doctor"] { color: var(--doctor); border-color: var(--doctor); box-shadow: 4px 4px 0 var(--doctor), 0 10px 30px rgba(22,163,74,0.3); }
+        .role-tab.active[data-role="student"] { color: var(--student); border-color: var(--student); box-shadow: 4px 4px 0 var(--student), 0 10px 30px rgba(217,119,6,0.3); }
+        .role-tab.active[data-role="admin"] { color: var(--admin); border-color: var(--admin); box-shadow: 4px 4px 0 var(--admin), 0 10px 30px rgba(124,58,237,0.3); }
+
+        /* 3D Glow Effect */
+        .glow-effect {
+            position: relative;
+        }
+        .glow-effect::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            background: linear-gradient(45deg, var(--patient), var(--doctor), var(--student), var(--admin));
+            border-radius: 14px;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            filter: blur(15px);
+        }
+        .glow-effect:hover::before {
+            opacity: 0.5;
+        }
+
+        /* Depth shadows for 3D illusion */
+        .depth-shadow {
+            position: relative;
+        }
+        .depth-shadow::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 5%;
+            right: 5%;
+            height: 20px;
+            background: radial-gradient(ellipse at center, rgba(0,0,0,0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: -1;
         }
 
         .flip-card__back {
             width: 100%;
             transform: rotateY(180deg);
         }
-
-        /* ROLE TABS */
-        .role-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 30px;
-            justify-content: center;
-        }
-        .role-tab {
-            padding: 8px 16px;
-            border: 2px solid rgba(255,255,255,0.3);
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            color: white;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            cursor: pointer;
-            border-radius: 5px;
-            transition: all 0.3s ease;
-        }
-        .role-tab:hover {
-            background: rgba(255,255,255,0.2);
-            border-color: rgba(255,255,255,0.5);
-        }
-        .role-tab.active {
-            background: var(--bg-color);
-            border-color: var(--main-color);
-            box-shadow: 4px 4px 0 var(--main-color);
-            color: var(--main-color);
-        }
-        .role-tab.active[data-role="patient"] { color: var(--patient); border-color: var(--patient); box-shadow: 4px 4px 0 var(--patient); }
-        .role-tab.active[data-role="doctor"] { color: var(--doctor); border-color: var(--doctor); box-shadow: 4px 4px 0 var(--doctor); }
-        .role-tab.active[data-role="student"] { color: var(--student); border-color: var(--student); box-shadow: 4px 4px 0 var(--student); }
-        .role-tab.active[data-role="admin"] { color: var(--admin); border-color: var(--admin); box-shadow: 4px 4px 0 var(--admin); }
 
         /* TITLE */
         .title {
@@ -388,6 +500,29 @@
     </style>
 </head>
 <body>
+    <!-- ═══════════════════════════════════════════════════════════════
+         PARALLAX BACKGROUND LAYERS
+    ═══════════════════════════════════════════════════════════════ -->
+    <div class="parallax-container" id="parallaxContainer">
+        <div class="parallax-layer parallax-layer-1" data-speed="0.2"></div>
+        <div class="parallax-layer parallax-layer-2" data-speed="0.5"></div>
+        <div class="parallax-layer parallax-layer-3" data-speed="0.8"></div>
+    </div>
+
+    <!-- ═══════════════════════════════════════════════════════════════
+         FLOATING PARTICLES
+    ═══════════════════════════════════════════════════════════════ -->
+    <div class="particles-container" id="particlesContainer">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
     <!-- Top Nav -->
     <nav class="top-nav">
         <a href="index.html" class="brand">
@@ -482,7 +617,7 @@
                         <div class="role-badge admin">Admin Portal</div>
                         <h2 class="title">Admin Login</h2>
                         <div class="demo-creds" style="border-color:rgba(124,58,237,0.3);background:rgba(124,58,237,0.05);">
-                            <strong>Demo:</strong> <code>admin@rrdch.in</code> / <code>admin123</code>
+                            <strong>Demo:</strong> <code>admin@rrdch.in</code> / <code>Admin@2024</code>
                         </div>
                         <div class="flip-error" id="adminError">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/></svg>
@@ -544,7 +679,7 @@
             }
         }
         
-        // Login Handler
+        // Login Handler with Backend Integration
         async function handleLogin(e, role) {
             e.preventDefault();
             
@@ -552,40 +687,71 @@
             errorDiv.classList.remove('visible');
             
             // Get credentials
-            let user, pass;
+            let user, pass, body;
             if (role === 'patient') {
                 user = document.getElementById('patientId').value;
                 pass = document.getElementById('patientPw').value;
-                // Demo validation
-                if (user === 'PAT001' && pass === 'patient123') {
-                    window.location.href = 'patients.html';
-                    return;
-                }
+                body = { identifier: user, password: pass };
             } else if (role === 'doctor') {
                 user = document.getElementById('doctorEmail').value;
                 pass = document.getElementById('doctorPw').value;
-                if (user === 'doctor@rrdch.in' && pass === 'doctor123') {
-                    window.location.href = 'doctor-portal.html';
-                    return;
-                }
+                body = { email: user, password: pass };
             } else if (role === 'student') {
                 user = document.getElementById('studentId').value;
                 pass = document.getElementById('studentPw').value;
-                if (user === 'stu2024001' && pass === 'Student@2024') {
-                    window.location.href = 'students.html';
-                    return;
-                }
+                body = { student_id: user, password: pass };
             } else if (role === 'admin') {
                 user = document.getElementById('adminEmail').value;
                 pass = document.getElementById('adminPw').value;
-                if (user === 'admin@rrdch.in' && pass === 'admin123') {
-                    window.location.href = 'admin.html';
-                    return;
-                }
+                body = { email: user, password: pass };
             }
             
-            // Show error
-            errorDiv.classList.add('visible');
+            try {
+                // Demo credentials fallback
+                const demoCredentials = {
+                    patient: { user: 'PAT001', pass: 'patient123' },
+                    doctor: { user: 'doctor@rrdch.in', pass: 'doctor123' },
+                    student: { user: 'stu2024001', pass: 'Student@2024' },
+                    admin: { user: 'admin@rrdch.in', pass: 'Admin@2024' }
+                };
+                
+                if (user === demoCredentials[role].user && pass === demoCredentials[role].pass) {
+                    // Store session
+                    sessionStorage.setItem('rrdch_role', role);
+                    sessionStorage.setItem('rrdch_user', user);
+                    // Redirect to portal with hash
+                    window.location.href = `portal.html#${role}`;
+                    return;
+                }
+                
+                // Backend API call
+                const API_BASE = 'http://localhost:3000/api';
+                let endpoint;
+                if (role === 'patient') endpoint = '/auth/login';
+                else if (role === 'doctor') endpoint = '/auth/doctor/login';
+                else if (role === 'student') endpoint = '/auth/student/login';
+                else if (role === 'admin') endpoint = '/auth/admin/login';
+                
+                const response = await fetch(`${API_BASE}${endpoint}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                
+                const result = await response.json();
+                
+                if (result.ok) {
+                    sessionStorage.setItem('rrdch_role', role);
+                    sessionStorage.setItem('rrdch_user', JSON.stringify(result.data.user));
+                    sessionStorage.setItem('rrdch_token', result.data.token);
+                    window.location.href = `portal.html#${role}`;
+                } else {
+                    throw new Error(result.message || 'Login failed');
+                }
+            } catch (err) {
+                console.error('Login error:', err);
+                errorDiv.classList.add('visible');
+            }
         }
         
         // Register Handler
@@ -594,6 +760,532 @@
             alert('Registration successful! Please login.');
             document.getElementById('formToggle').checked = false;
         }
+        
+        // Check hash on load to show appropriate dashboard
+        window.addEventListener('load', function() {
+            const hash = window.location.hash.substring(1);
+            const role = sessionStorage.getItem('rrdch_role');
+            
+            if (hash && role) {
+                // Show dashboard based on hash
+                showDashboard(hash);
+            } else if (hash) {
+                // Redirect to login if not authenticated
+                window.location.href = 'portal.html';
+            }
+        });
+        
+        // Show dashboard based on role
+        function showDashboard(role) {
+            // Hide login form, show dashboard
+            document.querySelector('.portal-wrap').style.display = 'none';
+            document.querySelector('.top-nav').style.display = 'none';
+            
+            // Create dashboard container
+            const dashboard = document.createElement('div');
+            dashboard.id = 'dashboard-container';
+            dashboard.style.cssText = 'min-height:100vh;background:#f8fafc;padding:2rem;';
+            
+            const content = getDashboardContent(role);
+            dashboard.innerHTML = content;
+            document.body.appendChild(dashboard);
+        }
+        
+        // Get dashboard content based on role
+        function getDashboardContent(role) {
+            const user = sessionStorage.getItem('rrdch_user');
+            
+            const dashboards = {
+                patient: `
+                    <nav style="background:#0284c7;padding:1rem 2%;display:flex;justify-content:space-between;align-items:center;">
+                        <div style="color:white;font-weight:800;font-size:1.25rem;">Patient Portal</div>
+                        <button onclick="logout()" style="padding:0.5rem 1rem;background:white;color:#0284c7;border:none;border-radius:5px;cursor:pointer;font-weight:600;">Logout</button>
+                    </nav>
+                    <div style="max-width:1200px;margin:2rem auto;padding:0 1rem;">
+                        <h1 style="color:#1e293b;margin-bottom:1rem;">Welcome, Patient</h1>
+                        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem;">
+                            <div style="background:white;padding:2rem;border-radius:12px;box-shadow:0 4px 6px rgba(0,0,0,0.1);">
+                                <h3 style="color:#0284c7;margin-bottom:0.5rem;">Book Appointment</h3>
+                                <p style="color:#64748b;margin-bottom:1rem;">Schedule a new appointment with our doctors</p>
+                                <button style="padding:0.75rem 1.5rem;background:#0284c7;color:white;border:none;border-radius:8px;cursor:pointer;">Book Now</button>
+                            </div>
+                            <div style="background:white;padding:2rem;border-radius:12px;box-shadow:0 4px 6px rgba(0,0,0,0.1);">
+                                <h3 style="color:#0284c7;margin-bottom:0.5rem;">View Records</h3>
+                                <p style="color:#64748b;margin-bottom:1rem;">Access your medical history and reports</p>
+                                <button style="padding:0.75rem 1.5rem;background:#0284c7;color:white;border:none;border-radius:8px;cursor:pointer;">View Records</button>
+                            </div>
+                            <div style="background:white;padding:2rem;border-radius:12px;box-shadow:0 4px 6px rgba(0,0,0,0.1);">
+                                <h3 style="color:#0284c7;margin-bottom:0.5rem;">Prescriptions</h3>
+                                <p style="color:#64748b;margin-bottom:1rem;">View current and past prescriptions</p>
+                                <button style="padding:0.75rem 1.5rem;background:#0284c7;color:white;border:none;border-radius:8px;cursor:pointer;">View All</button>
+                            </div>
+                        </div>
+                    </div>
+                `,
+                doctor: `
+                    <nav style="background:#16a34a;padding:1rem 2%;display:flex;justify-content:space-between;align-items:center;">
+                        <div style="color:white;font-weight:800;font-size:1.25rem;">Doctor Dashboard</div>
+                        <button onclick="logout()" style="padding:0.5rem 1rem;background:white;color:#16a34a;border:none;border-radius:5px;cursor:pointer;font-weight:600;">Logout</button>
+                    </nav>
+                    <div style="max-width:1200px;margin:2rem auto;padding:0 1rem;">
+                        <h1 style="color:#1e293b;margin-bottom:1rem;">Welcome, Doctor</h1>
+                        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem;">
+                            <div style="background:white;padding:2rem;border-radius:12px;box-shadow:0 4px 6px rgba(0,0,0,0.1);">
+                                <h3 style="color:#16a34a;margin-bottom:0.5rem;">Patient Queue</h3>
+                                <p style="color:#64748b;margin-bottom:1rem;">View and manage today's patient queue</p>
+                                <button style="padding:0.75rem 1.5rem;background:#16a34a;color:white;border:none;border-radius:8px;cursor:pointer;">View Queue</button>
+                            </div>
+                            <div style="background:white;padding:2rem;border-radius:12px;box-shadow:0 4px 6px rgba(0,0,0,0.1);">
+                                <h3 style="color:#16a34a;margin-bottom:0.5rem;">Appointments</h3>
+                                <p style="color:#64748b;margin-bottom:1rem;">Manage upcoming appointments</p>
+                                <button style="padding:0.75rem 1.5rem;background:#16a34a;color:white;border:none;border-radius:8px;cursor:pointer;">Manage</button>
+                            </div>
+                            <div style="background:white;padding:2rem;border-radius:12px;box-shadow:0 4px 6px rgba(0,0,0,0.1);">
+                                <h3 style="color:#16a34a;margin-bottom:0.5rem;">Case Notes</h3>
+                                <p style="color:#64748b;margin-bottom:1rem;">Add and view patient case notes</p>
+                                <button style="padding:0.75rem 1.5rem;background:#16a34a;color:white;border:none;border-radius:8px;cursor:pointer;">View Notes</button>
+                            </div>
+                        </div>
+                    </div>
+                `,
+                student: `
+                    <nav style="background:#d97706;padding:1rem 2%;display:flex;justify-content:space-between;align-items:center;">
+                        <div style="color:white;font-weight:800;font-size:1.25rem;">Student Portal</div>
+                        <button onclick="logout()" style="padding:0.5rem 1rem;background:white;color:#d97706;border:none;border-radius:5px;cursor:pointer;font-weight:600;">Logout</button>
+                    </nav>
+                    <div style="max-width:1200px;margin:2rem auto;padding:0 1rem;">
+                        <h1 style="color:#1e293b;margin-bottom:1rem;">Welcome, Student</h1>
+                        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem;">
+                            <div style="background:white;padding:2rem;border-radius:12px;box-shadow:0 4px 6px rgba(0,0,0,0.1);">
+                                <h3 style="color:#d97706;margin-bottom:0.5rem;">Attendance</h3>
+                                <p style="color:#64748b;margin-bottom:1rem;">View your attendance records</p>
+                                <button style="padding:0.75rem 1.5rem;background:#d97706;color:white;border:none;border-radius:8px;cursor:pointer;">View Attendance</button>
+                            </div>
+                            <div style="background:white;padding:2rem;border-radius:12px;box-shadow:0 4px 6px rgba(0,0,0,0.1);">
+                                <h3 style="color:#d97706;margin-bottom:0.5rem;">Exams</h3>
+                                <p style="color:#64748b;margin-bottom:1rem;">View exam schedules and results</p>
+                                <button style="padding:0.75rem 1.5rem;background:#d97706;color:white;border:none;border-radius:8px;cursor:pointer;">View Exams</button>
+                            </div>
+                            <div style="background:white;padding:2rem;border-radius:12px;box-shadow:0 4px 6px rgba(0,0,0,0.1);">
+                                <h3 style="color:#d97706;margin-bottom:0.5rem;">Study Materials</h3>
+                                <p style="color:#64748b;margin-bottom:1rem;">Access lecture notes and resources</p>
+                                <button style="padding:0.75rem 1.5rem;background:#d97706;color:white;border:none;border-radius:8px;cursor:pointer;">Access</button>
+                            </div>
+                        </div>
+                    </div>
+                `,
+                admin: `
+                    <nav style="background:#7c3aed;padding:1rem 2%;display:flex;justify-content:space-between;align-items:center;">
+                        <div style="color:white;font-weight:800;font-size:1.25rem;">Admin Portal</div>
+                        <button onclick="logout()" style="padding:0.5rem 1rem;background:white;color:#7c3aed;border:none;border-radius:5px;cursor:pointer;font-weight:600;">Logout</button>
+                    </nav>
+                    <div style="max-width:1200px;margin:2rem auto;padding:0 1rem;">
+                        <h1 style="color:#1e293b;margin-bottom:1rem;">Welcome, Administrator</h1>
+                        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem;">
+                            <div style="background:white;padding:2rem;border-radius:12px;box-shadow:0 4px 6px rgba(0,0,0,0.1);">
+                                <h3 style="color:#7c3aed;margin-bottom:0.5rem;">User Management</h3>
+                                <p style="color:#64748b;margin-bottom:1rem;">Manage all system users</p>
+                                <button style="padding:0.75rem 1.5rem;background:#7c3aed;color:white;border:none;border-radius:8px;cursor:pointer;">Manage Users</button>
+                            </div>
+                            <div style="background:white;padding:2rem;border-radius:12px;box-shadow:0 4px 6px rgba(0,0,0,0.1);">
+                                <h3 style="color:#7c3aed;margin-bottom:0.5rem;">Reports</h3>
+                                <p style="color:#64748b;margin-bottom:1rem;">View system reports and analytics</p>
+                                <button style="padding:0.75rem 1.5rem;background:#7c3aed;color:white;border:none;border-radius:8px;cursor:pointer;">View Reports</button>
+                            </div>
+                            <div style="background:white;padding:2rem;border-radius:12px;box-shadow:0 4px 6px rgba(0,0,0,0.1);">
+                                <h3 style="color:#7c3aed;margin-bottom:0.5rem;">Settings</h3>
+                                <p style="color:#64748b;margin-bottom:1rem;">Configure system settings</p>
+                                <button style="padding:0.75rem 1.5rem;background:#7c3aed;color:white;border:none;border-radius:8px;cursor:pointer;">Configure</button>
+                            </div>
+                        </div>
+                    </div>
+                `
+            };
+            
+            return dashboards[role] || dashboards.patient;
+        }
+        
+        // Logout function
+        function logout() {
+            sessionStorage.clear();
+            window.location.href = 'portal.html';
+        }
+
+        // ═══════════════════════════════════════════════════════════════
+        // PARALLAX & 3D EFFECTS
+        // ═══════════════════════════════════════════════════════════════
+        
+        // Mouse parallax for background layers
+        document.addEventListener('mousemove', (e) => {
+            const mouseX = e.clientX / window.innerWidth;
+            const mouseY = e.clientY / window.innerHeight;
+            
+            const layers = document.querySelectorAll('.parallax-layer');
+            layers.forEach(layer => {
+                const speed = parseFloat(layer.dataset.speed) || 0.5;
+                const x = (window.innerWidth / 2 - e.clientX) * speed * 0.05;
+                const y = (window.innerHeight / 2 - e.clientY) * speed * 0.05;
+                layer.style.transform = `translate(${x}px, ${y}px) scale(${1 + speed * 0.1})`;
+            });
+        });
+
+        // 3D Tilt effect for flip card
+        const flipCard = document.getElementById('flipInner');
+        if (flipCard) {
+            flipCard.addEventListener('mousemove', (e) => {
+                const rect = flipCard.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = (y - centerY) / 20;
+                const rotateY = (centerX - x) / 20;
+                
+                flipCard.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            });
+            
+            flipCard.addEventListener('mouseleave', () => {
+                flipCard.style.transform = 'perspective(1000px) rotateX(0) rotateY(0)';
+            });
+        }
+
+        // 3D Tilt for role tabs
+        document.querySelectorAll('.role-tab').forEach(tab => {
+            tab.addEventListener('mousemove', (e) => {
+                const rect = tab.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = (y - centerY) / 10;
+                const rotateY = (centerX - x) / 10;
+                
+                tab.style.transform = `perspective(500px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(10px)`;
+            });
+            
+            tab.addEventListener('mouseleave', () => {
+                if (!tab.classList.contains('active')) {
+                    tab.style.transform = 'perspective(500px) rotateX(0) rotateY(0) translateZ(0)';
+                } else {
+                    tab.style.transform = 'perspective(500px) rotateX(0) rotateY(0) translateZ(0) translateY(-2px)';
+                }
+            });
+        });
+
+        // Smooth scroll parallax on page scroll
+        let ticking = false;
+        window.addEventListener('scroll', () => {
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    const scrolled = window.pageYOffset;
+                    const parallaxContainer = document.getElementById('parallaxContainer');
+                    if (parallaxContainer) {
+                        parallaxContainer.style.transform = `translateY(${scrolled * 0.5}px)`;
+                    }
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        });
+
+        // ═══════════════════════════════════════════════════════════════
+        // FULL BACKEND API INTEGRATION
+        // ═══════════════════════════════════════════════════════════════
+        
+        const API_CONFIG = {
+            baseURL: 'http://localhost:3000/api',
+            timeout: 10000,
+            retries: 3
+        };
+
+        // Backend API Client
+        class RRDCH_API {
+            constructor() {
+                this.baseURL = API_CONFIG.baseURL;
+                this.token = sessionStorage.getItem('rrdch_token');
+            }
+
+            async request(endpoint, options = {}) {
+                const url = `${this.baseURL}${endpoint}`;
+                const config = {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        ...(this.token && { 'Authorization': `Bearer ${this.token}` })
+                    },
+                    ...options
+                };
+
+                try {
+                    const controller = new AbortController();
+                    const timeoutId = setTimeout(() => controller.abort(), API_CONFIG.timeout);
+                    
+                    const response = await fetch(url, {
+                        ...config,
+                        signal: controller.signal
+                    });
+                    clearTimeout(timeoutId);
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+
+                    return await response.json();
+                } catch (error) {
+                    if (error.name === 'AbortError') {
+                        throw new Error('Request timeout');
+                    }
+                    throw error;
+                }
+            }
+
+            // Auth endpoints
+            async login(role, credentials) {
+                const endpoints = {
+                    patient: '/auth/login',
+                    doctor: '/auth/doctor/login',
+                    student: '/auth/student/login',
+                    admin: '/auth/admin/login'
+                };
+                return this.request(endpoints[role], {
+                    method: 'POST',
+                    body: JSON.stringify(credentials)
+                });
+            }
+
+            async register(patientData) {
+                return this.request('/auth/register', {
+                    method: 'POST',
+                    body: JSON.stringify(patientData)
+                });
+            }
+
+            async logout() {
+                return this.request('/auth/logout', { method: 'POST' });
+            }
+
+            async refreshToken() {
+                return this.request('/auth/refresh', { method: 'POST' });
+            }
+
+            // User endpoints
+            async getProfile() {
+                return this.request('/user/profile');
+            }
+
+            async updateProfile(data) {
+                return this.request('/user/profile', {
+                    method: 'PUT',
+                    body: JSON.stringify(data)
+                });
+            }
+
+            // Appointment endpoints (Patient)
+            async bookAppointment(data) {
+                return this.request('/appointments', {
+                    method: 'POST',
+                    body: JSON.stringify(data)
+                });
+            }
+
+            async getAppointments() {
+                return this.request('/appointments/my');
+            }
+
+            async cancelAppointment(id) {
+                return this.request(`/appointments/${id}/cancel`, { method: 'POST' });
+            }
+
+            // Doctor endpoints
+            async getPatientQueue() {
+                return this.request('/doctor/queue');
+            }
+
+            async updatePatientStatus(token, status) {
+                return this.request('/doctor/queue/status', {
+                    method: 'PUT',
+                    body: JSON.stringify({ token_no: token, status })
+                });
+            }
+
+            async saveCaseNotes(token, notes) {
+                return this.request('/doctor/notes', {
+                    method: 'POST',
+                    body: JSON.stringify({ token_no: token, notes })
+                });
+            }
+
+            // Student endpoints
+            async getAttendance() {
+                return this.request('/student/attendance');
+            }
+
+            async getExamSchedule() {
+                return this.request('/student/exams');
+            }
+
+            async getStudyMaterials() {
+                return this.request('/student/materials');
+            }
+
+            // Admin endpoints
+            async getAllUsers() {
+                return this.request('/admin/users');
+            }
+
+            async createUser(data) {
+                return this.request('/admin/users', {
+                    method: 'POST',
+                    body: JSON.stringify(data)
+                });
+            }
+
+            async getSystemReports() {
+                return this.request('/admin/reports');
+            }
+        }
+
+        // Initialize API client globally
+        window.rrdchAPI = new RRDCH_API();
+
+        // Enhanced login handler with full backend
+        async function backendLogin(role, credentials) {
+            const api = window.rrdchAPI;
+            
+            try {
+                showLoading(true);
+                const result = await api.login(role, credentials);
+                
+                if (result.ok && result.data) {
+                    sessionStorage.setItem('rrdch_role', role);
+                    sessionStorage.setItem('rrdch_user', JSON.stringify(result.data.user));
+                    sessionStorage.setItem('rrdch_token', result.data.token);
+                    
+                    // Update API token
+                    api.token = result.data.token;
+                    
+                    showToast('Login successful!', 'success');
+                    
+                    // Redirect to dashboard
+                    setTimeout(() => {
+                        window.location.href = `portal.html#${role}`;
+                    }, 500);
+                    
+                    return true;
+                } else {
+                    throw new Error(result.message || 'Login failed');
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                showToast(error.message || 'Connection failed. Using demo mode.', 'warning');
+                
+                // Fallback to demo credentials
+                return tryDemoLogin(role, credentials);
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Demo credentials fallback
+        function tryDemoLogin(role, credentials) {
+            const demoCreds = {
+                patient: { id: 'PAT001', password: 'patient123' },
+                doctor: { email: 'doctor@rrdch.in', password: 'doctor123' },
+                student: { id: 'stu2024001', password: 'Student@2024' },
+                admin: { email: 'admin@rrdch.in', password: 'Admin@2024' }
+            };
+
+            const demo = demoCreds[role];
+            const match = role === 'patient' || role === 'student' 
+                ? credentials.identifier === demo.id && credentials.password === demo.password
+                : credentials.email === demo.email && credentials.password === demo.password;
+
+            if (match) {
+                sessionStorage.setItem('rrdch_role', role);
+                sessionStorage.setItem('rrdch_user', JSON.stringify({ role, demo: true }));
+                sessionStorage.setItem('rrdch_token', 'demo-token');
+                
+                showToast('Demo login successful!', 'success');
+                setTimeout(() => {
+                    window.location.href = `portal.html#${role}`;
+                }, 500);
+                return true;
+            }
+            
+            return false;
+        }
+
+        // Loading indicator
+        function showLoading(show) {
+            let loader = document.getElementById('global-loader');
+            if (!loader) {
+                loader = document.createElement('div');
+                loader.id = 'global-loader';
+                loader.innerHTML = `
+                    <div style="position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:9999;display:flex;align-items:center;justify-content:center;">
+                        <div style="width:50px;height:50px;border:4px solid white;border-top-color:transparent;border-radius:50%;animation:spin 1s linear infinite;"></div>
+                    </div>
+                `;
+                document.body.appendChild(loader);
+            }
+            loader.style.display = show ? 'flex' : 'none';
+        }
+
+        // Toast notifications
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            const colors = {
+                success: '#16a34a',
+                error: '#dc2626',
+                warning: '#d97706',
+                info: '#0284c7'
+            };
+            
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 25px;
+                background: ${colors[type]};
+                color: white;
+                border-radius: 8px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+                z-index: 10000;
+                font-weight: 600;
+                animation: slideIn 0.3s ease;
+            `;
+            toast.textContent = message;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        // Add animation keyframes
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes spin { to { transform: rotate(360deg); } }
+            @keyframes slideIn { from { transform: translateX(100px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+            @keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100px); opacity: 0; } }
+        `;
+        document.head.appendChild(style);
+
+        // Auto-refresh token every 14 minutes
+        setInterval(async () => {
+            const token = sessionStorage.getItem('rrdch_token');
+            if (token && token !== 'demo-token') {
+                try {
+                    await window.rrdchAPI.refreshToken();
+                } catch (e) {
+                    console.log('Token refresh failed');
+                }
+            }
+        }, 14 * 60 * 1000);
     </script>
 </body>
 </html>

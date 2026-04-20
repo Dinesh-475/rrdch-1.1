@@ -143,20 +143,18 @@ body {
   background: transparent;
 }
 
-/* Logo image with glow effect - ENLARGED */
+/* Logo image styling */
 .header-brand-slanted img,
 .animated-logo {
   height: 85px;
   width: auto;
   object-fit: contain;
   flex-shrink: 0;
-  filter: drop-shadow(0 4px 15px rgba(28,69,120,0.4)) drop-shadow(0 0 20px rgba(195,156,91,0.3));
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease;
 }
 
 .header-brand-slanted:hover .animated-logo {
-  transform: scale(1.08);
-  filter: drop-shadow(0 10px 30px rgba(28,69,120,0.5)) drop-shadow(0 0 30px rgba(195,156,91,0.5));
+  transform: scale(1.05);
 }
 
 /* ── Old text styles removed ─── */
@@ -1061,11 +1059,69 @@ body.nav-drawer-open .cu-drawer-right {
 }
 
 /* =====================================================
-   CAMPUS LIFE — Diamond Navigation (Image 3)
+   CAMPUS LIFE — Animated Uneven Circular Buttons
    ===================================================== */
 .campus-life-section {
   padding: 4rem 0;
   background: linear-gradient(180deg, white 0%, #f5f8fc 100%);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Parallax Background Layer */
+.campus-life-section::before {
+  content: '';
+  position: absolute;
+  inset: -20%;
+  background: 
+    radial-gradient(circle at 20% 80%, rgba(195, 156, 91, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 80% 20%, rgba(28, 69, 120, 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 50% 50%, rgba(195, 156, 91, 0.05) 0%, transparent 60%);
+  z-index: 0;
+  animation: bg-float 20s infinite ease-in-out;
+  pointer-events: none;
+}
+
+@keyframes bg-float {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-20px) scale(1.05); }
+}
+
+.campus-life-section .section-tag {
+  display: block;
+  text-align: center;
+  width: fit-content;
+  margin: 0 auto 0.75rem;
+  padding: 0.5rem 1rem;
+  background: rgba(195, 156, 91, 0.15);
+  color: #c39c5b;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  border-radius: 2rem;
+  border: 1px solid rgba(195, 156, 91, 0.3);
+}
+
+.campus-life-section .section-title {
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: #1c4578;
+  margin-bottom: 0.5rem;
+}
+
+.campus-life-section .section-title .highlight {
+  color: #c39c5b;
+  position: relative;
+  display: inline;
+}
+
+.campus-life-section .section-subtitle {
+  text-align: center;
+  color: #64748b;
+  font-size: 1rem;
+  margin-bottom: 2rem;
 }
 
 .diamond-container {
@@ -1089,118 +1145,379 @@ body.nav-drawer-open .cu-drawer-right {
 .diamond-connector {
   width: 40px;
   height: 2px;
-  background: #e2e8f0;
+  background: linear-gradient(90deg, #e2e8f0, #c39c5b, #e2e8f0);
   flex-shrink: 0;
+  opacity: 0.6;
 }
 
-@keyframes morphing-blob {
-  0% { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; }
-  34% { border-radius: 70% 30% 50% 50% / 30% 30% 70% 70%; }
-  67% { border-radius: 100% 60% 60% 100% / 100% 100% 60% 60%; }
-  100% { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; }
-}
+/* ═══════════════════════════════════════════════════════════════
+   ANIMATED UNEVEN CIRCULAR BUTTONS
+   ═══════════════════════════════════════════════════════════════ */
 
-/* ── Hand-drawn organic blob animations ── */
-@keyframes cl-idle {
-  0%   { filter: url(#hdn1); }
-  50%  { rotate: 2deg; filter: url(#hdn2); }
-  100% { filter: url(#hdn1); }
-}
-@keyframes cl-hover {
-  0%   { rotate: 0deg;  filter: url(#hdn1); translate: 0 0px;  }
-  25%  { rotate: -1deg; filter: url(#hdn2); translate: 0 -3px; }
-  50%  { rotate: 0deg;  filter: url(#hdn1); translate: 0 2px;  }
-  75%  { rotate: -1deg; filter: url(#hdn2); translate: 0 -3px; }
-  100% { rotate: 0deg;  filter: url(#hdn1); translate: 0 0px;  }
-}
-@keyframes cl-active {
-  0%   { filter: url(#hdn1); translate: 0 -1px; }
-  25%  { rotate: -2.5deg; }
-  50%  { filter: url(#hdn2); translate: 0 1px;  }
-  66%  { rotate: 1.5deg; }
-  100% { filter: url(#hdn1); translate: 0 -1px; }
-}
-
+/* SVG Filters for hand-drawn effect */
 .diamond-card {
   width: 140px;
   height: 140px;
   background: white;
-  /* default shape — water-drop like */
-  border-radius: 60% 40% 55% 45% / 50% 60% 40% 50%;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: rgba(51,51,51,0.4) 4px 4px 0 1px;
-  border: 1px solid rgba(17,40,75,0.08);
-  transition: box-shadow 0.3s ease, background 0.3s ease;
+  box-shadow: 4px 4px 0 rgba(50, 50, 50, 0.4);
+  border: 2px solid #323232;
   cursor: pointer;
   flex-shrink: 0;
   position: relative;
   z-index: 2;
   text-decoration: none;
+  overflow: hidden;
+  
+  /* Text styling */
+  text-align: center;
+  font-family: "Courier New", monospace;
+  font-size: 0.65rem;
+  font-weight: bold;
+  color: #323232;
+  
+  /* Animation & Effects */
+  transition: all 0.3s ease-in-out;
   animation: cl-idle 1s infinite ease-in-out;
+  filter: url(#handDrawnNoise);
+  user-select: none;
 }
 
-/* Each button gets a unique organic shape */
-.diamond-wrapper:nth-child(1) .diamond-card { border-radius: 55% 45% 65% 35% / 40% 60% 40% 60%; }
-.diamond-wrapper:nth-child(2) .diamond-card { border-radius: 45% 55% 35% 65% / 60% 40% 60% 40%; }
-.diamond-wrapper:nth-child(3) .diamond-card { border-radius: 70% 30% 50% 50% / 35% 65% 35% 65%; }
-.diamond-wrapper:nth-child(4) .diamond-card { border-radius: 40% 60% 60% 40% / 55% 45% 55% 45%; }
-.diamond-wrapper:nth-child(5) .diamond-card { border-radius: 65% 35% 40% 60% / 45% 55% 45% 55%; }
-.diamond-wrapper:nth-child(6) .diamond-card { border-radius: 35% 65% 55% 45% / 60% 40% 60% 40%; }
-.diamond-wrapper:nth-child(7) .diamond-card { border-radius: 50% 50% 30% 70% / 40% 60% 50% 50%; }
+/* ═══════════════════════════════════════════════════════════════
+   EXTREME UNEVEN ORGANIC SHAPES - Each button is unique
+   ═══════════════════════════════════════════════════════════════ */
 
-/* Hover: navy fill + float wobble */
-.diamond-card:hover,
-.diamond-card.active {
-  background: var(--cu-blue);
-  box-shadow: inset rgba(51,51,51,0.9) 3px 3px 0 1px;
-  animation: cl-hover 2.5s infinite ease-in-out;
+/* Button 1: Blob-like irregular */
+.diamond-wrapper:nth-child(1) .diamond-card { 
+  border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  transform: rotate(-5deg) scale(0.98);
+  animation: cl-idle 1.2s infinite ease-in-out, float-1 4s infinite ease-in-out;
 }
 
-/* Active/pressed */
-.diamond-card:active {
-  box-shadow: inset rgba(51,51,51,0.9) 4px 4px 0 1px;
-  rotate: -2.5deg;
-  animation: cl-active 1s infinite ease-in-out;
+/* Button 2: Egg shape tilted */
+.diamond-wrapper:nth-child(2) .diamond-card { 
+  border-radius: 40% 60% 70% 30% / 40% 50% 50% 60%;
+  transform: rotate(4deg) scale(1.02);
+  animation: cl-idle 0.9s infinite ease-in-out, float-2 5s infinite ease-in-out;
 }
 
-.diamond-card:hover .icon-wrap, .diamond-card.active .icon-wrap {
-  background: rgba(255,255,255,0.15) !important;
+/* Button 3: Teardrop shape */
+.diamond-wrapper:nth-child(3) .diamond-card { 
+  border-radius: 50% 50% 20% 80% / 25% 75% 75% 25%;
+  transform: rotate(-3deg) scale(0.95);
+  animation: cl-idle 1.1s infinite ease-in-out, float-3 4.5s infinite ease-in-out;
+}
+
+/* Button 4: Featured - Star/Pointed shape with gold */
+.diamond-wrapper:nth-child(4) .diamond-card { 
+  border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+  transform: rotate(5deg) scale(1.05);
+  border-color: #c39c5b;
+  background: linear-gradient(135deg, #323232 0%, #1c4578 100%);
+  color: white;
+  animation: cl-idle 1s infinite ease-in-out, float-4 3.5s infinite ease-in-out, glow-pulse 2s infinite ease-in-out;
+}
+.diamond-wrapper:nth-child(4) .diamond-card .icon-wrap {
+  color: #c39c5b;
+}
+.diamond-wrapper:nth-child(4) .diamond-card p {
   color: white;
 }
-.diamond-card:hover p, .diamond-card.active p {
-  color: white !important;
+
+/* Button 5: Rounded triangle-ish */
+.diamond-wrapper:nth-child(5) .diamond-card { 
+  border-radius: 70% 30% 50% 50% / 30% 60% 40% 70%;
+  transform: rotate(-4deg) scale(0.97);
+  animation: cl-idle 1.3s infinite ease-in-out, float-5 5.5s infinite ease-in-out;
 }
 
+/* Button 6: Bean/oval shape */
+.diamond-wrapper:nth-child(6) .diamond-card { 
+  border-radius: 35% 65% 65% 35% / 55% 45% 55% 45%;
+  transform: rotate(3deg) scale(1.01);
+  animation: cl-idle 0.8s infinite ease-in-out, float-6 4.2s infinite ease-in-out;
+}
+
+/* Button 7: Pebble/Stone shape */
+.diamond-wrapper:nth-child(7) .diamond-card { 
+  border-radius: 65% 35% 35% 65% / 45% 55% 45% 55%;
+  transform: rotate(-2deg) scale(0.99);
+  animation: cl-idle 1.4s infinite ease-in-out, float-7 3.8s infinite ease-in-out;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   FLOATING PARALLAX ANIMATIONS - Each button floats differently
+   ═══════════════════════════════════════════════════════════════ */
+@keyframes float-1 {
+  0%, 100% { translate: 0 0; }
+  25% { translate: 3px -8px; }
+  50% { translate: -2px 5px; }
+  75% { translate: 4px -3px; }
+}
+
+@keyframes float-2 {
+  0%, 100% { translate: 0 0; }
+  33% { translate: -4px 6px; }
+  66% { translate: 2px -5px; }
+}
+
+@keyframes float-3 {
+  0%, 100% { translate: 0 0; }
+  25% { translate: 5px 4px; }
+  50% { translate: -3px -7px; }
+  75% { translate: 2px 3px; }
+}
+
+@keyframes float-4 {
+  0%, 100% { translate: 0 0; }
+  20% { translate: -3px -6px; }
+  40% { translate: 4px 2px; }
+  60% { translate: -2px 5px; }
+  80% { translate: 3px -4px; }
+}
+
+@keyframes float-5 {
+  0%, 100% { translate: 0 0; }
+  30% { translate: 6px -3px; }
+  60% { translate: -4px 7px; }
+}
+
+@keyframes float-6 {
+  0%, 100% { translate: 0 0; }
+  25% { translate: -5px 5px; }
+  50% { translate: 3px -6px; }
+  75% { translate: -2px -3px; }
+}
+
+@keyframes float-7 {
+  0%, 100% { translate: 0 0; }
+  40% { translate: 4px 8px; }
+  80% { translate: -3px -5px; }
+}
+
+/* Diamond Content */
 .diamond-content {
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.4rem;
+  gap: 0.5rem;
   z-index: 2;
+  position: relative;
 }
 
 .diamond-content .icon-wrap {
-  color: var(--cu-blue);
+  color: #323232;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
-  background: var(--cu-gold-muted);
-  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  background: rgba(245, 245, 245, 0.9);
+  border-radius: 12px;
+  border: 2px solid #323232;
+  box-shadow: 2px 2px 0 #323232;
   transition: all 0.3s ease;
 }
 
 .diamond-content p {
-  font-size: 0.72rem;
+  font-size: 0.7rem;
   font-weight: 700;
-  color: var(--cu-text-muted);
-  line-height: 1.25;
+  line-height: 1.2;
   text-transform: uppercase;
-  letter-spacing: 0.3px;
+  letter-spacing: 0.5px;
+  margin: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   HOVER EFFECTS
+   ═══════════════════════════════════════════════════════════════ */
+.diamond-card:hover {
+  font-weight: bold;
+  rotate: -2.5deg;
+  animation: cl-hover 2.5s infinite ease-in-out;
+  box-shadow: 6px 6px 0 rgba(0, 0, 0, 0.6);
+  transform: translate(-2px, -2px);
+}
+
+/* Highlight effect on hover */
+.diamond-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(195, 156, 91, 0.3) 0%, transparent 50%);
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.diamond-card:hover::before {
+  opacity: 1;
+}
+
+.diamond-card:hover .icon-wrap {
+  background: rgba(195, 156, 91, 0.2);
+  border-color: #c39c5b;
+  transform: scale(1.1);
+}
+
+/* Hover: black fill for non-active cards */
+.diamond-wrapper:not(:nth-child(4)) .diamond-card:hover {
+  background: #323232;
+  color: white;
+}
+
+.diamond-wrapper:not(:nth-child(4)) .diamond-card:hover .icon-wrap {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border-color: white;
+}
+
+.diamond-wrapper:not(:nth-child(4)) .diamond-card:hover p {
+  color: white;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ACTIVE/CLICKED STATE
+   ═══════════════════════════════════════════════════════════════ */
+.diamond-card:active {
+  box-shadow: inset rgba(50, 50, 50, 0.95) 4px 4px 0 1px;
+  rotate: -2.5deg;
+  animation: cl-active 1s infinite ease-in-out;
+  transform: translate(2px, 2px);
+}
+
+.diamond-wrapper:nth-child(4) .diamond-card:hover {
+  background: linear-gradient(135deg, #1c4578 0%, #323232 100%);
+  border-color: #c39c5b;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   ANIMATION KEYFRAMES
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Idle animation - subtle wobble */
+@keyframes cl-idle {
+  0% { 
+    filter: url(#handDrawnNoise);
+    border-radius: inherit;
+  }
+  50% { 
+    rotate: 2deg;
+    filter: url(#handDrawnNoise2);
+  }
+  100% { 
+    filter: url(#handDrawnNoise);
+    border-radius: inherit;
+  }
+}
+
+/* Hover animation - more pronounced movement */
+@keyframes cl-hover {
+  0% { 
+    rotate: 0deg;
+    filter: url(#handDrawnNoise);
+    translate: 0 0px;
+  }
+  25% { 
+    rotate: -1deg;
+    filter: url(#handDrawnNoise2);
+    translate: 0 -3px;
+  }
+  50% { 
+    rotate: 0deg;
+    filter: url(#handDrawnNoise);
+    translate: 0 2px;
+  }
+  75% { 
+    rotate: -1deg;
+    filter: url(#handDrawnNoise2);
+    translate: 0 -3px;
+  }
+  100% { 
+    rotate: 0deg;
+    filter: url(#handDrawnNoise);
+    translate: 0 0px;
+  }
+}
+
+/* Active/pressed animation */
+@keyframes cl-active {
+  0% { 
+    filter: url(#handDrawnNoise);
+    translate: 0 -1px;
+  }
+  25% { 
+    rotate: -3deg;
+  }
+  50% { 
+    filter: url(#handDrawnNoise2);
+    translate: 0 1px;
+  }
+  66% { 
+    rotate: 1.5deg;
+  }
+  100% { 
+    filter: url(#handDrawnNoise);
+    translate: 0 -1px;
+  }
+}
+
+/* Glow pulse animation for active card */
+@keyframes glow-pulse {
+  0%, 100% { 
+    box-shadow: 4px 4px 0 rgba(195, 156, 91, 0.4), 0 0 20px rgba(195, 156, 91, 0.3);
+  }
+  50% { 
+    box-shadow: 4px 4px 0 rgba(195, 156, 91, 0.6), 0 0 30px rgba(195, 156, 91, 0.5);
+  }
+}
+
+.diamond-wrapper:nth-child(4) .diamond-card {
+  animation: cl-idle 1s infinite ease-in-out, glow-pulse 3s infinite ease-in-out;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .diamond-card {
+    width: 120px;
+    height: 120px;
+  }
+  .diamond-content .icon-wrap {
+    width: 36px;
+    height: 36px;
+  }
+  .diamond-content p {
+    font-size: 0.6rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .diamond-container {
+    padding: 2rem 1rem;
+    gap: 0.5rem;
+  }
+  .diamond-card {
+    width: 100px;
+    height: 100px;
+  }
+  .diamond-connector {
+    width: 20px;
+  }
+  .diamond-content .icon-wrap {
+    width: 32px;
+    height: 32px;
+  }
+  .diamond-content p {
+    font-size: 0.55rem;
+  }
 }
 
 
@@ -1904,12 +2221,11 @@ html {
 
 /* Logo transition enhancement (animation removed) */
 .animated-logo {
-  transition: transform 0.3s ease, filter 0.3s ease;
+  transition: transform 0.3s ease;
 }
 
 .header-brand-slanted:hover .animated-logo {
   transform: scale(1.04);
-  filter: drop-shadow(0 8px 20px rgba(28,69,120,0.25));
 }
 
 /* Drawer open/close smooth animation */
